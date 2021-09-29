@@ -55,7 +55,7 @@ public class CardAccountService {
         return cardAccountMapper.mapCardAccountListToCardAccountListDto(cardAccountList);
     }
 
-    public CardAccountResponse update(CardAccountRequest cardAccountRequest, long id) {
+    public CardAccountResponse update(long id, CardAccountRequest cardAccountRequest) {
         CardAccount cardAccount = cardAccountRepository.findById(id).orElseThrow(NullPointerException::new);
         updateCardAccountFromDto(cardAccountRequest, cardAccount);
         cardAccount = cardAccountRepository.save(cardAccount);

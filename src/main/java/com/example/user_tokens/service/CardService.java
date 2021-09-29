@@ -47,7 +47,7 @@ public class CardService {
         return cardMapper.mapCardListToCardListDto(cards);
     }
 
-    public CardResponse update(CardRequest cardRequest, long id) {
+    public CardResponse update(long id, CardRequest cardRequest) {
         Card card = cardRepository.findById(id).orElseThrow(NullPointerException::new);
         updateCardFromDto(cardRequest, card);
         card = cardRepository.save(card);
