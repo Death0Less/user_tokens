@@ -1,0 +1,11 @@
+databaseChangeLog:
+  - changeSet:
+      id: 14
+      author: Artoym
+      changes:
+        - addColumn:
+            tableName: employees
+            columns:
+              - column:
+                  name: role_id
+                  type: BIGINT
