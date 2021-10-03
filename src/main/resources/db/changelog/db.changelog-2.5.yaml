@@ -1,0 +1,10 @@
+databaseChangeLog:
+  - changeSet:
+      id: 16
+      author: Author
+      changes:
+        - renameColumn:
+            columnDataType: varchar(3)
+            newColumnName: logic_status
+            oldColumnName: logic_number
+            tableName: cards

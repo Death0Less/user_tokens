@@ -8,13 +8,14 @@ import com.example.user_tokens.model.CardAccount;
 import com.example.user_tokens.repository.CardAccountRepository;
 import com.example.user_tokens.repository.CardRepository;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Transactional
 public class CardService {
 

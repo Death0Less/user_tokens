@@ -16,8 +16,8 @@ public class CardController {
     private final CardService cardService;
 
 
-    @PostMapping
-    public CardResponse save(long cardAccountId, @RequestBody CardRequest cardRequest) {
+    @PostMapping("/{cardAccountId}")
+    public CardResponse save(@PathVariable long cardAccountId, @RequestBody CardRequest cardRequest) {
         return cardService.save(cardAccountId, cardRequest);
     }
 

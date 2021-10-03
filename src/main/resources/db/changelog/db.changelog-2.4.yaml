@@ -1,0 +1,13 @@
+databaseChangeLog:
+  - changeSet:
+      id: 15
+      author: Artoym
+      changes:
+        - addColumn:
+            tableName: card_accounts
+            columns:
+              - column:
+                  name: employee_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
