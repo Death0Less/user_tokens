@@ -3,6 +3,7 @@ package com.example.user_tokens.service;
 import com.example.user_tokens.dto.request.CardRequest;
 import com.example.user_tokens.dto.response.CardResponse;
 import com.example.user_tokens.mapper.CardMapper;
+import com.example.user_tokens.mapper.LogicStatusMapper;
 import com.example.user_tokens.model.Card;
 import com.example.user_tokens.model.CardAccount;
 import com.example.user_tokens.repository.CardAccountRepository;
@@ -22,14 +23,17 @@ public class CardService {
     private final CardRepository cardRepository;
     private final CardMapper cardMapper;
     private final CardAccountRepository cardAccountRepository;
+    private final LogicStatusMapper logicStatusMapper;
 
     @Transactional
     public CardResponse save(long cardAccountId, CardRequest cardRequest) {
         Card card = cardMapper.mapCardDtoToCard(cardRequest);
         CardAccount cardAccount = cardAccountRepository.findById(cardAccountId).orElseThrow(NullPointerException::new);
         card.setCardAccount(cardAccount);
-        cardRepository.save(card);
-        return cardMapper.mapCardToCardDto(card);
+        card = cardRepository.save(card);
+        CardResponse cardResponse = cardMapper.mapCardToCardDto(card);
+        cardResponse.setLogicStatus(logicStatusMapper.mapStatusFields(cardResponse.getLogicStatus()));
+        return cardResponse;
     }
 
     @Transactional
@@ -40,12 +44,13 @@ public class CardService {
 
     public CardResponse findById(long id) {
         Card card = cardRepository.findById(id).orElseThrow(NullPointerException::new);
+        card.setLogicStatus(logicStatusMapper.mapStatusFields(card.getLogicStatus()));
         return cardMapper.mapCardToCardDto(card);
     }
 
     public List<CardResponse> findAll() {
         List<Card> cards = cardRepository.findAll();
-        return cardMapper.mapCardListToCardListDto(cards);
+        return logicStatusMapper.mapCardList(cardMapper.mapCardListToCardListDto(cards));
     }
 
     public CardResponse update(long id, CardRequest cardRequest) {
@@ -57,7 +62,7 @@ public class CardService {
 
     private void updateCardFromDto(CardRequest cardRequest, Card card) {
         if (cardRequest.getLogicStatus() != null) {
-            card.setLogicStatus(cardRequest.getLogicStatus());
+            card.setLogicStatus(logicStatusMapper.mapStatusFields(cardRequest.getLogicStatus()));
         }
         if (cardRequest.getCardNumber() != null) {
             card.setCardNumber(cardRequest.getCardNumber());

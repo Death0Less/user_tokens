@@ -6,3 +6,13 @@ spring:
 
     jpa:
       show-sql: true
+
+logic-status:
+  logic-statuses:
+    100: The request for the production was sent
+    200: Done
+    300: Sent to the department
+    400: Located in the bank department
+    430: Sent to a client
+  default-message: Card status is unknown
+
