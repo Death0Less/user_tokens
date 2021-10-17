@@ -1,6 +1,7 @@
 package com.example.user_tokens.model;
 
 import lombok.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.util.Date;

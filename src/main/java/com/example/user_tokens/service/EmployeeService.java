@@ -5,11 +5,13 @@ import com.example.user_tokens.dto.response.EmployeeResponse;
 import com.example.user_tokens.mapper.EmployeeMapper;
 import com.example.user_tokens.model.Employee;
 import com.example.user_tokens.repository.EmployeeRepository;
+import liquibase.pro.packaged.E;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,6 +22,7 @@ public class EmployeeService {
 
     private final EmployeeRepository employeeRepository;
     private final EmployeeMapper employeeMapper;
+    private final EntityManager entityManager;
 
     @Transactional
     public EmployeeResponse save(EmployeeRequest employeeRequest) {
@@ -43,6 +46,22 @@ public class EmployeeService {
         List<Employee> employees = employeeRepository.findAll();
         return employeeMapper.mapEmployeeListToEmployeeListDto(employees);
     }
+
+    public List<EmployeeResponse> findByBirthDateMore(Date birthDate) {
+        List employees = entityManager
+                .createQuery("SELECT e from Employee e where e.birthday >: birthDate")
+                .setParameter("birthDate", birthDate)
+                .getResultList();
+        return employeeMapper.mapEmployeeListToEmployeeListDto(employees);
+    }
+
+    public List<EmployeeResponse> findByBirthDateLess(Date birthDate) {
+        List employees = entityManager.createQuery("select e from Employee e where e.birthday <: birthDate")
+                .setParameter("birthDate", birthDate)
+                .getResultList();
+        return employeeMapper.mapEmployeeListToEmployeeListDto(employees);
+    }
+
 
     public EmployeeResponse update(long id, EmployeeRequest employeeRequest) {
         Employee employee = employeeRepository.findById(id).orElseThrow(NullPointerException::new);
