@@ -33,7 +33,6 @@ public class EmployeeMapper {
                 .patronymic(employee.getPatronymic())
                 .idNumber(employee.getIdNumber())
                 .birthday(employee.getBirthday())
-                .birthday(employee.getBirthday())
                 .status(employee.getStatus())
                 .build();
     }
