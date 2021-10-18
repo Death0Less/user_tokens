@@ -5,7 +5,6 @@ import com.example.user_tokens.dto.response.EmployeeResponse;
 import com.example.user_tokens.mapper.EmployeeMapper;
 import com.example.user_tokens.model.Employee;
 import com.example.user_tokens.repository.EmployeeRepository;
-import liquibase.pro.packaged.E;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +12,6 @@ import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -62,6 +60,12 @@ public class EmployeeService {
         return employeeMapper.mapEmployeeListToEmployeeListDto(employees);
     }
 
+    public List<EmployeeResponse> findByIdNumber(String idNumber) {
+        List employees = entityManager.createQuery("select e from Employee e where e.idNumber LIKE : idNumber")
+                .setParameter("idNumber", "%"+idNumber+"%")
+                .getResultList();
+        return employeeMapper.mapEmployeeListToEmployeeListDto(employees);
+    }
 
     public EmployeeResponse update(long id, EmployeeRequest employeeRequest) {
         Employee employee = employeeRepository.findById(id).orElseThrow(NullPointerException::new);
