@@ -1,5 +1,6 @@
 package com.example.user_tokens.service;
 
+import com.example.user_tokens.dto.FilterDto;
 import com.example.user_tokens.dto.request.EmployeeRequest;
 import com.example.user_tokens.dto.response.EmployeeResponse;
 import com.example.user_tokens.mapper.EmployeeMapper;
@@ -41,41 +42,54 @@ public class EmployeeService {
         return employeeMapper.mapEmployeeToEmployeeDto(employee);
     }
 
-    public List<EmployeeResponse> findAll(int offset, int size) {
+    public List<EmployeeResponse> findAll(Pageable pageable) {
         List employees = entityManager
                 .createQuery("select e from Employee e")
-                .setFirstResult(offset)
-                .setMaxResults(size)
+                .setFirstResult(pageable.getPageNumber())
+                .setMaxResults(pageable.getPageSize())
                 .getResultList();
         return employeeMapper.mapEmployeeListToEmployeeListDto(employees);
     }
 
-    public List<EmployeeResponse> findByBirthDateMore(Date birthDate, int offset, int size) {
+    public List<EmployeeResponse> findByBirthDateMore(Date birthDate, Pageable pageable) {
         List employees = entityManager
                 .createQuery("SELECT e from Employee e where e.birthday >: birthDate")
                 .setParameter("birthDate", birthDate)
-                .setFirstResult(offset)
-                .setMaxResults(size)
+                .setFirstResult(pageable.getPageNumber())
+                .setMaxResults(pageable.getPageSize())
                 .getResultList();
         return employeeMapper.mapEmployeeListToEmployeeListDto(employees);
     }
 
-    public List<EmployeeResponse> findByBirthDateLess(Date birthDate, int offset, int size) {
+    public List<EmployeeResponse> findByBirthDateLess(Date birthDate, Pageable pageable) {
         List employees = entityManager.createQuery("select e from Employee e where e.birthday <: birthDate")
                 .setParameter("birthDate", birthDate)
-                .setFirstResult(offset)
-                .setMaxResults(size)
+                .setFirstResult(pageable.getPageNumber())
+                .setMaxResults(pageable.getPageSize())
                 .getResultList();
         return employeeMapper.mapEmployeeListToEmployeeListDto(employees);
     }
 
-    public List<EmployeeResponse> findByIdNumber(String idNumber, int offset, int size) {
+    public List<EmployeeResponse> findByIdNumber(String idNumber, Pageable pageable) {
         List employees = entityManager.createQuery("select e from Employee e where e.idNumber LIKE : idNumber")
                 .setParameter("idNumber", "%"+idNumber+"%")
-                .setFirstResult(offset)
-                .setMaxResults(size)
+                .setFirstResult(pageable.getPageNumber())
+                .setMaxResults(pageable.getPageSize())
                 .getResultList();
         return employeeMapper.mapEmployeeListToEmployeeListDto(employees);
+    }
+
+    public List<EmployeeResponse> findByFilters(FilterDto filterDto, Pageable pageable) {
+        if (filterDto.getIdNumber() != null) {
+            return findByIdNumber(filterDto.getIdNumber(), pageable);
+        }
+        if (filterDto.getBirthDateLess() != null) {
+            return findByBirthDateLess(filterDto.getBirthDateLess(), pageable);
+        }
+        if (filterDto.getBirthDateMore() != null) {
+            return findByBirthDateMore(filterDto.getBirthDateMore(), pageable);
+        }
+        return findAll(pageable);
     }
 
     public EmployeeResponse update(long id, EmployeeRequest employeeRequest) {

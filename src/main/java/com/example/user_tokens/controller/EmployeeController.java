@@ -1,17 +1,13 @@
 package com.example.user_tokens.controller;
 
+import com.example.user_tokens.dto.FilterDto;
 import com.example.user_tokens.dto.request.EmployeeRequest;
 import com.example.user_tokens.dto.response.EmployeeResponse;
-import com.example.user_tokens.model.Employee;
 import com.example.user_tokens.service.EmployeeService;
-import liquibase.pro.packaged.L;
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.autoconfigure.quartz.QuartzTransactionManager;
 import org.springframework.data.domain.Pageable;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -37,26 +33,14 @@ public class EmployeeController {
     }
 
     @GetMapping
-    public List<EmployeeResponse> findAll(@RequestParam int offset, @RequestParam int size) {
-        return employeeService.findAll(offset, size);
+    public List<EmployeeResponse> findAll(Pageable pageable) {
+        return employeeService.findAll(pageable);
     }
 
-   @GetMapping("/dateMore")
-    public List<EmployeeResponse> findByBirthDateMore(@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date birthDate,
-                                                      @RequestParam int offset, @RequestParam int size) {
-        return employeeService.findByBirthDateMore(birthDate, offset, size);
-   }
-
-   @GetMapping("/dateLess")
-   public List<EmployeeResponse> findBirthDateLess(@RequestParam  @DateTimeFormat(pattern = "yyyy-MM-dd") Date birthDate,
-                                                   @RequestParam int offset, @RequestParam int size) {
-        return employeeService.findByBirthDateLess(birthDate, offset, size);
-   }
-
-   @GetMapping("/idNumber")
-   public List<EmployeeResponse> findByIdNumber(@RequestParam String idNumber, @RequestParam int offset, @RequestParam int size) {
-        return employeeService.findByIdNumber(idNumber, offset, size);
-   }
+    @GetMapping("/filters")
+    public List<EmployeeResponse> findByFilters(FilterDto filterDto, Pageable pageable) {
+        return employeeService.findByFilters(filterDto, pageable);
+    }
 
     @PutMapping("/{id}")
     public EmployeeResponse update(@PathVariable long id, @RequestBody EmployeeRequest employeeRequest) {
