@@ -6,6 +6,7 @@ import com.example.user_tokens.mapper.EmployeeMapper;
 import com.example.user_tokens.model.Employee;
 import com.example.user_tokens.repository.EmployeeRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityManager;
@@ -40,29 +41,39 @@ public class EmployeeService {
         return employeeMapper.mapEmployeeToEmployeeDto(employee);
     }
 
-    public List<EmployeeResponse> findAll() {
-        List<Employee> employees = employeeRepository.findAll();
+    public List<EmployeeResponse> findAll(int offset, int size) {
+        List employees = entityManager
+                .createQuery("select e from Employee e")
+                .setFirstResult(offset)
+                .setMaxResults(size)
+                .getResultList();
         return employeeMapper.mapEmployeeListToEmployeeListDto(employees);
     }
 
-    public List<EmployeeResponse> findByBirthDateMore(Date birthDate) {
+    public List<EmployeeResponse> findByBirthDateMore(Date birthDate, int offset, int size) {
         List employees = entityManager
                 .createQuery("SELECT e from Employee e where e.birthday >: birthDate")
                 .setParameter("birthDate", birthDate)
+                .setFirstResult(offset)
+                .setMaxResults(size)
                 .getResultList();
         return employeeMapper.mapEmployeeListToEmployeeListDto(employees);
     }
 
-    public List<EmployeeResponse> findByBirthDateLess(Date birthDate) {
+    public List<EmployeeResponse> findByBirthDateLess(Date birthDate, int offset, int size) {
         List employees = entityManager.createQuery("select e from Employee e where e.birthday <: birthDate")
                 .setParameter("birthDate", birthDate)
+                .setFirstResult(offset)
+                .setMaxResults(size)
                 .getResultList();
         return employeeMapper.mapEmployeeListToEmployeeListDto(employees);
     }
 
-    public List<EmployeeResponse> findByIdNumber(String idNumber) {
+    public List<EmployeeResponse> findByIdNumber(String idNumber, int offset, int size) {
         List employees = entityManager.createQuery("select e from Employee e where e.idNumber LIKE : idNumber")
                 .setParameter("idNumber", "%"+idNumber+"%")
+                .setFirstResult(offset)
+                .setMaxResults(size)
                 .getResultList();
         return employeeMapper.mapEmployeeListToEmployeeListDto(employees);
     }

@@ -7,6 +7,7 @@ import com.example.user_tokens.service.EmployeeService;
 import liquibase.pro.packaged.L;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.quartz.QuartzTransactionManager;
+import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,23 +37,25 @@ public class EmployeeController {
     }
 
     @GetMapping
-    public List<EmployeeResponse> findAll() {
-        return employeeService.findAll();
+    public List<EmployeeResponse> findAll(@RequestParam int offset, @RequestParam int size) {
+        return employeeService.findAll(offset, size);
     }
 
    @GetMapping("/dateMore")
-    public List<EmployeeResponse> findByBirthDateMore(@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date birthDate) {
-        return employeeService.findByBirthDateMore(birthDate);
+    public List<EmployeeResponse> findByBirthDateMore(@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date birthDate,
+                                                      @RequestParam int offset, @RequestParam int size) {
+        return employeeService.findByBirthDateMore(birthDate, offset, size);
    }
 
    @GetMapping("/dateLess")
-   public List<EmployeeResponse> findBirthDateLess(@RequestParam  @DateTimeFormat(pattern = "yyyy-MM-dd") Date birthDate) {
-        return employeeService.findByBirthDateLess(birthDate);
+   public List<EmployeeResponse> findBirthDateLess(@RequestParam  @DateTimeFormat(pattern = "yyyy-MM-dd") Date birthDate,
+                                                   @RequestParam int offset, @RequestParam int size) {
+        return employeeService.findByBirthDateLess(birthDate, offset, size);
    }
 
    @GetMapping("/idNumber")
-   public List<EmployeeResponse> findByIdNumber(@RequestParam String idNumber) {
-        return employeeService.findByIdNumber(idNumber);
+   public List<EmployeeResponse> findByIdNumber(@RequestParam String idNumber, @RequestParam int offset, @RequestParam int size) {
+        return employeeService.findByIdNumber(idNumber, offset, size);
    }
 
     @PutMapping("/{id}")
