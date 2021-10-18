@@ -50,6 +50,11 @@ public class EmployeeController {
         return employeeService.findByBirthDateLess(birthDate);
    }
 
+   @GetMapping("/idNumber")
+   public List<EmployeeResponse> findByIdNumber(@RequestParam String idNumber) {
+        return employeeService.findByIdNumber(idNumber);
+   }
+
     @PutMapping("/{id}")
     public EmployeeResponse update(@PathVariable long id, @RequestBody EmployeeRequest employeeRequest) {
         return employeeService.update(id, employeeRequest);
